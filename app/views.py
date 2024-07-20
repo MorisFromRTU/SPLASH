@@ -230,8 +230,12 @@ def upload_profile_picture(request):
 
 @login_required
 def get_all_users(request):
-    users = CustomUser.objects.all()
     form = SearchForm(request.GET)
+    query = request.GET.get('query', '')
+    if query:
+        users = CustomUser.objects.filter(username__icontains=query)
+    else:
+        users = CustomUser.objects.all()
     context = {
         'users': users,
         'form' : form
@@ -249,3 +253,18 @@ def get_user(request, id):
         'user' : user,
     }
     return render(request, 'personal_page.html', context)
+
+@login_required
+def articles_page(request):
+    form = SearchForm(request.GET)
+    query = request.GET.get('query', '')
+    if query:
+        articles = Article.objects.filter(title__icontains=query) | Article.objects.filter(description__icontains=query)
+    else:
+        articles = Article.objects.all()
+
+    context = {
+        'form': form, 
+        'articles': articles
+        }
+    return render(request, 'articles.html', context)

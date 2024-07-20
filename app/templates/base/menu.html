@@ -7,7 +7,7 @@
     </ul>
     <ul class="nav">
       {% if user.is_authenticated %}
-        <li class="nav-item"><a href="{% url 'personal' %}" class="nav-link link-light px-2">{{ user.username }}</a></li>
+        <li class="nav-item"><a href="{% url 'user' user.id %}" class="nav-link link-light px-2">{{ user.username }}</a></li>
         <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link link-light px-2">Выйти</a></li>
       {% else %}
         <li class="nav-item"><a href="{% url 'login' %}" class="nav-link link-light px-2">Логин</a></li>
@@ -24,8 +24,5 @@
         <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
         <span class="fs-4">Сплэш</span>
       </a>
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
-        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-      </form>
     </div>
 </header>
