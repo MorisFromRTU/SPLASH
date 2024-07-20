@@ -26,7 +26,9 @@ urlpatterns = [
     path('shop/', views.shop_page, name='shop'),
     path('time/', views.time_page),
     path('users/', views.get_all_users, name='users'),
-    path('users/<int:id>', views.get_user, name='user')
+    path('users/<int:id>', views.get_user, name='user'),
+    path('chat/<int:chat_id>/', views.chat_detail, name='chat_detail'),
+    path('chat_with/<int:user_id>/', views.get_or_create_chat, name='get_or_create_chat'),
 ]
 
 if settings.DEBUG:

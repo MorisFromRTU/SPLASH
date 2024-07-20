@@ -1,5 +1,5 @@
 from django import forms
-from .models import Article, CustomUser
+from .models import Article, CustomUser, Message
 
 class ArticleForm(forms.ModelForm):
     class Meta:
@@ -58,3 +58,11 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['profile_picture']
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Введите сообщение...', 'rows': 3, 'style': 'resize:none;'}),
+        }

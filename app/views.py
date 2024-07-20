@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from app.models import Article, Comment, ArticleLike, CommentLike, CustomUser
-from .forms import ArticleForm, SearchForm, RegistrationForm, LoginForm, UserProfileForm
+from app.models import Article, Comment, ArticleLike, CommentLike, CustomUser, Chat, Message
+from .forms import ArticleForm, SearchForm, RegistrationForm, LoginForm, UserProfileForm, MessageForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.serializers import serialize
 import random
+
 
 def index_page(request):
     context = {
@@ -217,7 +219,7 @@ def upload_profile_picture(request):
             user = CustomUser.objects.get(id=request.user.id)
             user.profile_picture = form.cleaned_data['profile_picture']
             user.save()
-            return redirect('/upload/?success=true')
+            return redirect(f'/users/{user.id}')
     else:
         form = UserProfileForm()
     user = CustomUser.objects.get(id=request.user.id)
@@ -268,3 +270,35 @@ def articles_page(request):
         'articles': articles
         }
     return render(request, 'articles.html', context)
+
+@login_required
+def get_or_create_chat(request, user_id):
+    other_user = get_object_or_404(CustomUser, id=user_id)
+    chat = Chat.objects.filter(participants=request.user).filter(participants=other_user).first()
+    
+    if not chat:
+        chat = Chat.objects.create()
+        chat.participants.add(request.user, other_user)
+    
+    return redirect('chat_detail', chat_id=chat.id)
+
+@login_required
+def chat_detail(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+    if request.user not in chat.participants.all():
+        return redirect('main')
+    
+    messages = chat.messages.all().order_by('timestamp') 
+    receiver = chat.participants.exclude(id=request.user.id).first()
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.chat = chat
+            message.sender = request.user
+            message.save()
+            return redirect('chat_detail', chat_id=chat.id)
+    else:
+        form = MessageForm()
+    
+    return render(request, 'chat_detail.html', {'chat': chat, 'messages': messages, 'form': form, 'receiver' : receiver})

@@ -68,3 +68,11 @@ class ReputationVote(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='votes')
     vote = models.IntegerField(choices=[(-1, '-1'), (1, '1')])
 
+class Chat(models.Model):
+    participants = models.ManyToManyField(CustomUser)
+
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)

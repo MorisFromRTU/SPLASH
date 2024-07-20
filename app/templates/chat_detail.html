@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="width: 80%; margin: 0 auto;">
+    <h2 class="text-center">{{ receiver.username }}</h2>
+    <div id="chat-messages" class="chat-messages border rounded p-3 mb-3" style="height: 50vh; overflow-y: auto;">
+        {% for message in messages %}
+        <div class="d-flex 
+            {% if message.sender == request.user %}
+                justify-content-end
+            {% else %}
+                justify-content-start
+            {% endif %} 
+            mb-2" data-message-id="{{ message.id }}">
+            <div class="p-2 rounded 
+            {% if message.sender == request.user %}
+                bg-primary text-white
+            {% else %}
+                bg-light
+            {% endif %}" 
+                style="max-width: 60%; word-wrap: break-word; word-break: break-word;">
+                <p class="mb-1 fw-light">{{ message.sender.username }}</p>
+                <p class="mb-1">{{ message.content }}</p>
+                <small class="text-muted">{{ message.timestamp|time:"H:i" }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <form method="post" class="d-flex mt-3" id="message-form">
+        {% csrf_token %}
+        <div class="me-2 flex-grow-1">
+            {{ form.content }}
+        </div>
+        <button type="submit" class="btn btn-success">Отправить</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatMessagesContainer = document.getElementById('chat-messages');
+        let loading = false;
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    });
+    </script>
+    
+
+{% endblock %}
