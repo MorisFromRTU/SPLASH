@@ -29,6 +29,7 @@ urlpatterns = [
     path('users/<int:id>', views.get_user, name='user'),
     path('chat/<int:chat_id>/', views.chat_detail, name='chat_detail'),
     path('chat_with/<int:user_id>/', views.get_or_create_chat, name='get_or_create_chat'),
+    path('delete_message/<int:message_id>/', views.delete_message, name='delete_message'),
 ]
 
 if settings.DEBUG:

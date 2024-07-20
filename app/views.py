@@ -6,7 +6,7 @@ from app.models import Article, Comment, ArticleLike, CommentLike, CustomUser, C
 from .forms import ArticleForm, SearchForm, RegistrationForm, LoginForm, UserProfileForm, MessageForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.core.serializers import serialize
+from django.http import JsonResponse
 import random
 
 
@@ -302,3 +302,13 @@ def chat_detail(request, chat_id):
         form = MessageForm()
     
     return render(request, 'chat_detail.html', {'chat': chat, 'messages': messages, 'form': form, 'receiver' : receiver})
+
+@login_required
+def delete_message(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    
+    if message.sender == request.user:
+        message.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=403)
