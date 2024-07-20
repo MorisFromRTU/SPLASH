@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Новая статья{% endblock %}
+
+{% block content %}
+<div class="alert alert-success" role="alert">
+  Добавлена новая статья
+</div>
+
+{% if article %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h3 class="card-title">{{ article.title }}</h3>
+      <h4 class="card-text"> Описание: {{ article.description }}</h4>
+      <h4 class="card-text"> Автор: {{ article.author }}</h4>
+      <h5 class="card-text">{{ article.views }} просмотров</h5>
+    </div>
+  </div>
+{% else %}  
+  <div class="alert alert-danger" role="alert">
+    Ошибка при генерации статьи
+  </div>
+{% endif %}
+{% endblock %}

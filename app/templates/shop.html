@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Текущая дата и время{% endblock %}
+
+{% block content %}
+  <h4>Текущая дата и время</h4>
+  {% if products %}
+      {% for product in products %}
+      <p>{{ product }}</p>
+      {% endfor %}
+  {% else %}
+      <p>Нет товаров. Приходите позже</p>
+  {% endif %}
+{% endblock %}

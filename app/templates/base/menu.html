@@ -1,0 +1,31 @@
+<nav class="navbar navbar-dark bg-primary">
+  <div class="container d-flex flex-wrap">
+    <ul class="nav me-auto">
+      <li class="nav-item"><a href="{% url 'main' %}" class="nav-link link-light px-2 active" aria-current="page">Главная</a></li>
+      <li class="nav-item"><a href="{% url 'articles' %}" class="nav-link link-light px-2">Форум</a></li>
+      <li class="nav-item"><a href="{% url 'users' %}" class="nav-link link-light px-2">Пользователи</a></li>
+    </ul>
+    <ul class="nav">
+      {% if user.is_authenticated %}
+        <li class="nav-item"><a href="{% url 'personal' %}" class="nav-link link-light px-2">{{ user.username }}</a></li>
+        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link link-light px-2">Выйти</a></li>
+      {% else %}
+        <li class="nav-item"><a href="{% url 'login' %}" class="nav-link link-light px-2">Логин</a></li>
+        <li class="nav-item"><a href="{% url 'registration' %}" class="nav-link link-light px-2">Регистрация</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+
+<header class="py-3 mb-4 border-bottom">
+    <div class="container d-flex flex-wrap justify-content-center">
+      <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+        <span class="fs-4">Сплэш</span>
+      </a>
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+      </form>
+    </div>
+</header>

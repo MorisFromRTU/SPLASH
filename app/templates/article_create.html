@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Добавить статью{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Создать статью</h5>
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Добавить статью</button>
+          </form>
+        </div>
+      </div>
+
+      {% if success %}
+      <div class="alert alert-success" style="margin-top: 1rem;" role="alert">
+        Добавлена новая статья
+      </div>
+      {% endif %}
+
+    </div>
+</div>
+
+
+{% endblock %}
