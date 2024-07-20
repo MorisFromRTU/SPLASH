@@ -18,8 +18,8 @@
         <div class="col-md-4">
             <div class="card text-center">
                 <div class="card-body">
-                    <h5 class="card-title">{{ user.username }}</h5>
-                    <img src="{{ user.profile_picture.url }}" class="profile-pic" id="profilePic">
+                    <h5 class="card-title">{{ user_page.username }}</h5>
+                    <img src="{{ user_page.profile_picture.url }}" class="profile-pic" id="profilePic">
                     <p class="card-text">Какая-то информация о вас.</p>
                     {% if not is_own_profile %}
                         <a href="#" class="btn btn-primary">Подписаться</a>

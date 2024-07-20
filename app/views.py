@@ -240,10 +240,12 @@ def get_all_users(request):
 
 @login_required
 def get_user(request, id):
-    user = CustomUser.objects.get(id=id)
-    is_own = user == request.user
+    user_page = CustomUser.objects.get(id=id)
+    user = request.user
+    is_own = user_page == user
     context = {
-        'user': user,
+        'user_page': user_page,
         'is_own_profile': is_own,
+        'user' : user,
     }
     return render(request, 'personal_page.html', context)
