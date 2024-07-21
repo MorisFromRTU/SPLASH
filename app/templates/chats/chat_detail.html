@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="width: 80%; margin: 0 auto;">
+    <div class="d-flex">
+        <div class="sidebar-container p-2" style="flex: 0 0 30%; border-right: 1px solid #ddd;">
+            <div class="new-content">
+                <h4 class="text-center">Чаты</h4>
+                <ul class="list-group list-group-flush">
+                    {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center user-item">
+                            <a href="{% url 'chat_detail' user.1.id %}" class="stretched-link">
+                                <img src="{{ user.0.profile_picture.url }}" class="profile-pic" id="profilePic">
+                                {{ user.0.username }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+        </div>
+        <div class="chat-messages-container flex-fill p-2" style="flex: 1;">
+            <h2 class="text-center mb-4">{{ receiver.username }}</h2>
+            <div id="chat-messages" class="chat-messages border rounded p-3 mb-3" style="height: 40vh; overflow-y: auto;">
+                {% for message in messages %}
+                <div class="d-flex 
+                    {% if message.sender == request.user %}
+                        justify-content-end
+                    {% else %}
+                        justify-content-start
+                    {% endif %} 
+                    mb-2">
+                    <div class="message-container p-2 rounded 
+                        {% if message.sender == request.user %}
+                            bg-primary text-white
+                        {% else %}
+                            bg-light
+                        {% endif %}" 
+                        style="max-width: 60%; word-wrap: break-word; word-break: break-word;" 
+                        data-message-id="{{ message.id }}" 
+                        oncontextmenu="showDeleteButton(event, this); return false;">
+                        <p class="mb-1 fw-light">{{ message.sender.username }}</p>
+                        <p class="mb-1">{{ message.content }}</p>
+                        <small class="text-muted">{{ message.timestamp|time:"H:i" }}</small>
+                        {% if message.sender == request.user %}
+                        <button class="delete-btn btn btn-light btn-sm" onclick="deleteMessage(event, this)">Удалить</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <form method="post" class="d-flex">
+                {% csrf_token %}
+                <div class="me-2 flex-grow-1">
+                    {{ form.content }}
+                </div>
+                <button type="submit" class="btn btn-success">Отправить</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chatMessagesContainer = document.getElementById('chat-messages');
+    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+});
+
+function showDeleteButton(event, element) {
+    event.preventDefault();
+    const deleteButton = element.querySelector('.delete-btn');
+    if (deleteButton) {
+        deleteButton.style.display = (deleteButton.style.display === 'inline-block') ? 'none' : 'inline-block';
+    }
+}
+
+function deleteMessage(event, button) {
+    event.stopPropagation();
+    const messageId = button.closest('.message-container').dataset.messageId;
+    const deleteUrl = `{% url 'delete_message' 0 %}`.replace('0', messageId);
+    if (confirm('Вы уверены, что хотите удалить это сообщение?')) {
+        fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.closest('.d-flex').remove();
+            } else {
+                alert('Ошибка при удалении сообщения.');
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+}
+</script>
+
+<style>
+.delete-btn {
+    display: none;
+}
+
+.user-item {
+    transition: background-color 0.3s;
+    cursor: pointer;
+    font-size: 1.2em; 
+    padding: 15px;
+}
+
+.user-item:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+</style>
+
+{% endblock %}

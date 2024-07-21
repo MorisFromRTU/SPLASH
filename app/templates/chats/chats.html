@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="width: 80%; margin: 0 auto;">
+    <div class="d-flex">
+        <div class="sidebar-container p-2" style="flex: 0 0 30%; border-right: 1px solid #ddd;">
+            <div class="new-content">
+                <h4 class="text-center">Чаты</h4>
+                <ul class="list-group list-group-flush">
+                    {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center user-item">
+                            <a href="{% url 'chat_detail' user.1.id %}" class="stretched-link">
+                                <img src="{{ user.0.profile_picture.url }}" class="profile-pic" id="profilePic">
+                                {{ user.0.username }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+        </div>
+        <div class="chat-messages-container flex-fill p-2" style="flex: 1;">
+            <h2 class="text-center mb-4"> Выберите чат </h2>
+        </div>
+    </div>
+</div>
+
+<style>
+    .delete-btn {
+        display: none;
+    }
+    
+    .user-item {
+        transition: background-color 0.3s;
+        cursor: pointer;
+        font-size: 1.2em; 
+        padding: 15px;
+    }
+    
+    .user-item:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+    
+    .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 1rem;
+    }
+    
+    </style>
+
+{% endblock %}

@@ -4,6 +4,7 @@
       <li class="nav-item"><a href="{% url 'main' %}" class="nav-link link-light px-2 active" aria-current="page">Главная</a></li>
       <li class="nav-item"><a href="{% url 'articles' %}" class="nav-link link-light px-2">Форум</a></li>
       <li class="nav-item"><a href="{% url 'users' %}" class="nav-link link-light px-2">Пользователи</a></li>
+      <li class="nav-item"><a href="{% url 'chats' %}" class="nav-link link-light px-2">Сообщения</a></li>
     </ul>
     <ul class="nav">
       {% if user.is_authenticated %}

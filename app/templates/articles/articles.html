@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Форум{% endblock %}
+
+{% block content %}
+  <form method="get" class="form-control" style="padding: 1rem;">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Поиск</button>
+  </form>
+
+
+  <form method="get" class="form-inline" style="padding: 1rem;">
+    {% if user.is_authenticated %}
+    
+    <button type="button" class="btn btn-primary w-100"><a href="{% url 'article_create' %}" class="nav-link link-light">Добавить статью</a></button>
+    {% else %}
+    <a href="{% url 'article_create' %}" class="btn btn-secondary w-100 disabled" role="button" aria-disabled="true">Авторизируйтесь, чтобы добавить статью</a>
+    {% endif %}
+  </form>
+    
+  </form>
+  {% if articles %}
+      {% for article in articles %}
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-body">
+          <h3 class="card-title" style="cursor: pointer;"><a style="text-decoration: none; color: black;" href="/articles/{{ article.id }}">{{ article.title }}</a></h3>
+          <h5 class="card-text">{{ article.description }}</h5>
+          <p class="card-text">Автор: {{ article.author }}</p>
+        </div>
+      </div>
+      {% endfor %}
+  {% else %}
+      <p>Нет статей. Приходите позже</p>
+  {% endif %}
+{% endblock %}
